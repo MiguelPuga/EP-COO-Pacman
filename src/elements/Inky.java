@@ -1,5 +1,6 @@
 package elements;
 
+import control.AnimationController;
 import utils.Consts;
 import utils.Drawing;
 import utils.Position;
@@ -12,6 +13,16 @@ public class Inky extends Ghost  {
      
 	public Inky(String imageName) {
 	      super(imageName);
+
+		sprites.add("inky.png");
+		sprites.add("inky_2.png");
+		sprites.add("inky_l1.png");
+		sprites.add("inky_l2.png");
+		sprites.add("inky_t1.png"); // 8
+		sprites.add("inky_t2.png"); // 9
+		sprites.add("inky_b1.png"); // 10
+		sprites.add("inky_b2.png"); // 11
+
 	}
     @Override
     public void autoDraw(Graphics g){
@@ -30,7 +41,18 @@ public class Inky extends Ghost  {
         		escapePacman();
         	}
         }
-        	
+
+		if(!isMortal)
+		{
+			switch (getMoveDirection())
+			{
+				case MOVE_RIGHT -> AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
+				case MOVE_LEFT -> AnimationController.inkyState = AnimationController.State.MOVE_LEFT;
+				case MOVE_UP -> AnimationController.inkyState = AnimationController.State.MOVE_TOP;
+				case MOVE_DOWN -> AnimationController.inkyState = AnimationController.State.MOVE_BOTTOM;
+			}
+		}
+
         Drawing.draw(g, this.imageIcon, pos.getY(), pos.getX());
 
     }

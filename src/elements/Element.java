@@ -1,5 +1,6 @@
 package elements;
 
+import utils.Animation;
 import utils.Consts;
 import utils.Position;
 import java.awt.Graphics;
@@ -7,13 +8,20 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 public abstract class Element implements Serializable{
 
     protected ImageIcon imageIcon;
     protected Position pos;
     protected boolean isTransposable; 
-    protected boolean isMortal;       
+    protected boolean isMortal;
+
+    public Animation animator;
+
+    public ArrayList<String> sprites = new ArrayList<>();
+    public ArrayList<Integer[]> animationsClips = new ArrayList<>();
+    public int clip;
 
     protected Element(String imageName) {
         this.pos = new Position(1, 1,1);
@@ -36,6 +44,9 @@ public abstract class Element implements Serializable{
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
+
+        animator = new Animation(this);
+
     }
     
     public boolean overlap(Element elem) {
@@ -46,6 +57,20 @@ public abstract class Element implements Serializable{
             return true;
         else
             return false;
+    }
+
+    public void changeImage(String imageName){
+        try {
+            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
+            Image img = imageIcon.getImage();
+            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = bi.createGraphics();
+            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
+            imageIcon = new ImageIcon(bi);
+
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public String getStringPosition() {

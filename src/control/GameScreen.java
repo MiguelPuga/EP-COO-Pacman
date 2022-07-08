@@ -1,16 +1,7 @@
 package control;
 
-import elements.Blinky;
+import elements.*;
 
-import elements.Cherry;
-import elements.Clyde;
-import elements.Inky;
-import elements.PacDots;
-import elements.Pinky;
-import elements.PowerPellet;
-import elements.Pacman;
-import elements.Element;
-import elements.Wall;
 import utils.Consts;
 import utils.Drawing;
 import utils.Stage;
@@ -30,13 +21,15 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     
     private Pacman pacman;
     private ArrayList<Element> elemArray;
-    private GameController controller = new GameController();
+    private final GameController controller = new GameController();
     private Stage stage;
 
     private SaveState save;
     int cont = 0; 
     String fileName="jogo.ser";
-    
+
+    public static int currentKey = 0;
+
     public GameScreen() {
     	Main.time = System.currentTimeMillis();
         Drawing.setGameScreen(this);
@@ -63,13 +56,10 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
                 	fillInitialElemArrayFromMatrix(stage.getMatrix());
 
         	}
-        	catch(IOException e1){
+        	catch(IOException | ClassNotFoundException e1){
              		e1.printStackTrace();
             }
-            catch(ClassNotFoundException e1){
-             		e1.printStackTrace();
-            }
-        	 		
+
         }
         else {
         	this.stage = new Stage(Main.level);
@@ -87,7 +77,7 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     }
 
     private void fillInitialElemArrayFromMatrix(int [][]matrix) {
-	 	pacman = new Pacman("pacman.png");
+	 	pacman = new Pacman("pacman_1.png");
         pacman.setPosition(1,1);
         this.addElement(pacman);
 
@@ -106,29 +96,45 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         Clyde clyde=new Clyde("clyde.png");
         clyde.setPosition (8,9);
         this.addElement(clyde);
-        
-        
+
+        controller.ghosts.add(blinky);
+        controller.ghosts.add(pinky);
+        controller.ghosts.add(inky);
+        controller.ghosts.add(clyde);
+
+        controller.blinky = blinky;
+        controller.pinky = pinky;
+        controller.inky = inky;
+        controller.clyde = clyde;
+
         for (int i=0;i<Consts.NUM_CELLS; i=i+1){
         	for(int j=0; j<Consts.NUM_CELLS; j=j+1){
-        		switch (matrix[i][j]) {
-        		case 1:
-        			Wall wall1=new Wall("bricks6.png");
-        			wall1.setPosition (i,j);
-        			this.addElement(wall1);
-        			break;
-                case 0:    
-                    PacDots pacDot=new PacDots("pac-dot.png");
-                    pacDot.setPosition (i,j);
-                    this.addElement(pacDot);
-                    pacman.addNumberDotstoEat();
-                    break;
-                case 6:    
-                    PowerPellet power=new PowerPellet("power_Pellet.png");
-                    power.setPosition (i,j);
-                    this.addElement(power);
-                    break;    
-                default:
-                    break;
+                switch (matrix[i][j]) {
+                    case 1:
+                        Wall wall1=new Wall("bricks6.png");
+                        wall1.setPosition (i,j);
+                        this.addElement(wall1);
+                        break;
+                    case 0:
+                        PacDots pacDot=new PacDots("pac-dot.png");
+                        pacDot.setPosition (i,j);
+                        this.addElement(pacDot);
+                        pacman.addNumberDotstoEat();
+                        break;
+
+                    case 6:
+                        PowerPellet power=new PowerPellet("power_Pellet.png");
+                        power.setPosition (i,j);
+                        this.addElement(power);
+                        break;
+                    case 7:
+                        Note note = new Note("note_blue.png");
+                        note.setPosition(i, j);
+                        this.addElement(note);
+                        controller.notes.add(note);
+                        break;
+                    default:
+                        break;
         		}
             }
         }
@@ -182,6 +188,32 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         cont++;
         this.controller.drawAllElements(elemArray, g2);
         this.controller.processAllElements(elemArray,stage.getMatrix(),cont);
+
+        if(pacman.getPos().getX() % 1 == 0 && pacman.getPos().getY() % 1 == 0)
+        {
+            if(pacman.getMoveDirection() != currentKey) {
+                pacman.setMovDirection(currentKey);
+
+                if(pacman.isRock()) {
+                    switch (currentKey) {
+                        case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.MOVE_TOPX;
+                        case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.MOVE_LEFTX;
+                        case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.MOVE_RIGHTX;
+                        case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.MOVE_BOTTOMX;
+                    }
+                }else
+                {
+                    switch (currentKey) {
+                        case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.MOVE_TOP;
+                        case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.MOVE_LEFT;
+                        case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.MOVE_RIGHT;
+                        case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.MOVE_BOTTOM;
+                    }
+                }
+
+            }
+        }
+
         this.setTitle(pacman.getStringPosition()+" Score:"+pacman.getScore()+" Lifes:"+pacman.getLifes()+" Level:" + Main.level+" NumberDots:"+pacman.getNumberDotstoEat() + " NumberGhosts:"+pacman.getNumberGhosttoEat());
 
         g.dispose();
@@ -204,15 +236,32 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            pacman.setMovDirection(Pacman.MOVE_UP);
+            currentKey = Pacman.MOVE_UP;
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            pacman.setMovDirection(Pacman.MOVE_DOWN);
+            currentKey = Pacman.MOVE_DOWN;
         } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            pacman.setMovDirection(Pacman.MOVE_LEFT);
+            currentKey = Pacman.MOVE_LEFT;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            pacman.setMovDirection(Pacman.MOVE_RIGHT);
+            currentKey = Pacman.MOVE_RIGHT;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            pacman.setMovDirection(Pacman.STOP);
+            currentKey = Pacman.STOP;
+
+            if(pacman.isRock()) {
+                switch (pacman.getMoveDirection()) {
+                    case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE;
+                    case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFT;
+                    case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOP;
+                    case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOM;
+                }
+            }else
+            {
+                switch (pacman.getMoveDirection()) {
+                    case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE_RIGHTX;
+                    case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFTX;
+                    case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOPX;
+                    case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOMX;
+                }
+            }
         } else if ((e.getKeyCode() == KeyEvent.VK_S) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             try {
                 saveElemArrayandStage();

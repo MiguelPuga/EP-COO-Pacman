@@ -7,10 +7,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 import utils.Consts;
 
@@ -19,15 +16,18 @@ public class InitialScreen extends javax.swing.JFrame {
 	private JButton startButton;
 	private JButton openButton;
 	private final String nomeImagemInicial = "inicialimagem.png";
-	private static String[] levels = { "Level 1", "Level 2", "Level 3" };
+	private static String[] levels = { "Level 1", "Level 2", "Level 3", "Level 4"};
 	
 	private JComboBox<String> box;
-	
+
+	private JMenuBar menu;
+
 	public InitialScreen(){
 		configureInitialScreen();
 		configureStartButton();
 		configureOpenButton();
 		configureComboBox();
+		configureMenu();
 	}
 	
 	private void configureInitialScreen(){
@@ -111,4 +111,26 @@ public class InitialScreen extends javax.swing.JFrame {
 	    	Main.startGame();
 		}
 	}
+
+	private void configureMenu(){
+		HandlerStartButton handlerIniciarJogo = new HandlerStartButton();
+		HandlerOpenButton handlerOpenSavedGame = new HandlerOpenButton();
+
+		menu = new JMenuBar();
+		JMenu m1 = new JMenu("Start");
+		menu.add(m1);
+
+		JMenuItem i1 = new JMenuItem("New Game");
+		m1.add(i1);
+		i1.addActionListener(handlerIniciarJogo);
+
+		JMenuItem i2 = new JMenuItem("Load Game");
+		m1.add(i2);
+		i2.addActionListener(handlerOpenSavedGame);
+
+		menu.add(box);
+		setJMenuBar(menu);
+		add(menu);
+	}
+
 }

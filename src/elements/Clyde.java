@@ -1,5 +1,6 @@
 package elements;
 
+import control.AnimationController;
 import utils.Consts;
 import utils.Drawing;
 import utils.Position;
@@ -12,6 +13,16 @@ public class Clyde extends Ghost  {
      
 	public Clyde(String imageName) {
 	      super(imageName);
+
+		sprites.add("clyde.png");
+		sprites.add("clyde_2.png");
+		sprites.add("clyde_l1.png");
+		sprites.add("clyde_l2.png");
+		sprites.add("clyde_t1.png"); // 8
+		sprites.add("clyde_t2.png"); // 9
+		sprites.add("clyde_b1.png"); // 10
+		sprites.add("clyde_b2.png"); // 11
+
 	}
     @Override
     public void autoDraw(Graphics g){
@@ -25,12 +36,23 @@ public class Clyde extends Ghost  {
         else{
         	if(!this.isMortal){
         		followPacman();
+
         	}
         	else{
         		escapePacman();
         	}
         }
-        	
+
+		if(!isMortal)
+		{
+			switch (getMoveDirection())
+			{
+				case MOVE_RIGHT -> AnimationController.clydeState = AnimationController.State.MOVE_RIGHT;
+				case MOVE_LEFT -> AnimationController.clydeState = AnimationController.State.MOVE_LEFT;
+				case MOVE_UP -> AnimationController.clydeState = AnimationController.State.MOVE_TOP;
+				case MOVE_DOWN -> AnimationController.clydeState = AnimationController.State.MOVE_BOTTOM;
+			}
+		}
 
         Drawing.draw(g, this.imageIcon, pos.getY(), pos.getX());
 

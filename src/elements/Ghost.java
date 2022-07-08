@@ -1,5 +1,6 @@
 package elements;
 
+import control.AnimationController;
 import utils.Consts;
 import utils.Drawing;
 import utils.Position;
@@ -9,61 +10,88 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 
 public abstract class Ghost extends ElementMove{
     
-    private int[][] map = Drawing.getGameScreen().getStage().getMap();
+    private final int[][] map = Drawing.getGameScreen().getStage().getMap();
 
-	public static double speed = 0.8;
+	public static double speed = 0.9;
 	public static double slowSpeed = 0.5;
+
+	private long startTime;
 
     public Ghost(String imageName) {
         super(imageName);
+
+		sprites.add("ghostBlue.png"); // 0
+		sprites.add("blue_2.png"); // 1
+		sprites.add("ghostWhite.png"); // 2
+		sprites.add("white_2.png"); // 3
+
+		Integer[] move_right = new Integer[]{4,5};
+		Integer[] move_left = new Integer[]{6,7};
+		Integer[] move_top = new Integer[]{8,9};
+		Integer[] move_bottom = new Integer[]{10,11};
+		Integer[] moveMortal = new Integer[]{0,1};
+		Integer[] blink = new Integer[]{0,1,2,3};
+		animationsClips.add(move_right);
+		animationsClips.add(moveMortal);
+		animationsClips.add(blink);
+		animationsClips.add(move_left);
+		animationsClips.add(move_top);
+		animationsClips.add(move_bottom);
+
+		AnimationController.blinkyState = AnimationController.State.MOVE_RIGHT;
+		AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
+		AnimationController.pinkyState = AnimationController.State.MOVE_RIGHT;
+		AnimationController.clydeState = AnimationController.State.MOVE_RIGHT;
+
     }
     
      
     
     abstract public void autoDraw(Graphics g);
     
-    public void changeGhosttoBlue(String imageName) {
+    public void changeGhosttoBlue() {
         this.isTransposable = true;
         this.isMortal = true;
 
 		this.pos.setSpeed(slowSpeed);
 
-        try {
-            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
-            Image img = imageIcon.getImage();
-            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = bi.createGraphics();
-            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
-            imageIcon = new ImageIcon(bi);
-            
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+//        try {
+//            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
+//            Image img = imageIcon.getImage();
+//            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
+//            Graphics g = bi.createGraphics();
+//            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
+//            imageIcon = new ImageIcon(bi);
+//
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 
-    public void changeGhosttoNormal(String imageName) {
+    public void changeGhosttoNormal() {
         this.isTransposable = true;
         this.isMortal = false;
 
 		this.pos.setSpeed(speed);
-        
-        try {
-            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
-            Image img = imageIcon.getImage();
-            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = bi.createGraphics();
-            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
-            imageIcon = new ImageIcon(bi);
-            
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+//
+//        try {
+//            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
+//            Image img = imageIcon.getImage();
+//            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
+//            Graphics g = bi.createGraphics();
+//            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
+//            imageIcon = new ImageIcon(bi);
+//
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 
     protected void followPacman() {
@@ -79,6 +107,7 @@ public abstract class Ghost extends ElementMove{
         }else {
 			moveRandom();
 		}
+
 	}
     
     
@@ -190,12 +219,12 @@ public abstract class Ghost extends ElementMove{
 
 	}
 
-	private int getMapX()
+	public int getMapX()
 	{
 		return (int)Math.round(getPos().getX());
 	}
 
-	private int getMapY()
+	public int getMapY()
 	{
 		return (int)Math.round(getPos().getY());
 	}
