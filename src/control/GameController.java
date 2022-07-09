@@ -136,7 +136,7 @@ public class GameController implements Serializable {
 
     }
     //Método que checa se o Pacman colidiu com um Ghost
-	private boolean checkOverlapGhostPacman(ArrayList<Element> elements, Pacman pacman,int numberGhost) {
+	public boolean checkOverlapGhostPacman(ArrayList<Element> elements, Pacman pacman,int numberGhost) {
         boolean overlapGhostPacman=false;
         for (int i=1;i<=numberGhost;i++){
         	if(elements.get(i).overlap(pacman) & !elements.get(i).isMortal() && pacman.isMortal()){
@@ -182,7 +182,7 @@ public class GameController implements Serializable {
 	//Método que checa se o Pacman comeu alguma coisa e pontua/atualizado os dados do jogo
 	// caso sim e checa também o timer para algum elemento
 	//comestível desaparecer, também dá as recompensas de vida baseadas na pontuação
-	private void checkPacmanEatSomeOneAndOrTimeFruittoDesappear(ArrayList<Element> elements, Pacman pacman) {
+	public void checkPacmanEatSomeOneAndOrTimeFruittoDesappear(ArrayList<Element> elements, Pacman pacman) {
         Element eTemp;
 
 		for(int i =1; i < elements.size(); i++){
@@ -260,6 +260,9 @@ public class GameController implements Serializable {
 						}
 						if (eTemp instanceof PowerPellet || eTemp instanceof Note){
 							for(int k=1;k<=pacman.getNumberGhosttoEat(); k++){
+								if(!(elements.get(k) instanceof Ghost)){
+									continue;
+								}
 								((Ghost)elements.get(k)).changeGhosttoBlue();
 								AnimationController.blinkyState = AnimationController.State.WEAK;
 								AnimationController.inkyState = AnimationController.State.WEAK;
@@ -293,9 +296,12 @@ public class GameController implements Serializable {
 
 						if(eTemp instanceof Cherry || eTemp instanceof Strawberry || eTemp instanceof Note)
 						{
-							sfxController.stop();
+							if(sfxController != null) {
+								sfxController.stop();
+							}
 							sfxController = new Audio("eatfruit.wav");
 							sfxController.play();
+
 							ScreenText txt = new ScreenText(String.valueOf(points), (int)Math.round(eTemp.getPos().getX()), (int)Math.round(eTemp.getPos().getY()));
 							elements.add(txt);
 							txt.setStartTime(System.currentTimeMillis());
@@ -539,6 +545,12 @@ public class GameController implements Serializable {
 	}
 	//Método que muda as paredes
 	private void changeWalls(String img){
+
+		if(Main.gamePacMan == null)
+		{
+			return;
+		}
+
 		for (int i=0;i<Consts.NUM_CELLS; i=i+1) {
 			for (int j = 0; j < Consts.NUM_CELLS; j = j + 1) {
 				if (Main.gamePacMan.getStage().getMatrix()[i][j] == 1) {

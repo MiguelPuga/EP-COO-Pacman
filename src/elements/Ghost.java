@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 //Classe responsável pelos fantamas desse jogo
 public abstract class Ghost extends ElementMove{
     
-    private final int[][] map = Drawing.getGameScreen().getStage().getMap();
+    private final int[][] map;
 
 	public static double speed = 0.9;
 	public static double slowSpeed = 0.5;
@@ -25,6 +25,13 @@ public abstract class Ghost extends ElementMove{
 	//de cada fantasma
     public Ghost(String imageName) {
         super(imageName);
+
+		if(Drawing.getGameScreen() != null) {
+			map = Drawing.getGameScreen().getStage().getMap();
+		}else
+		{
+			map = new int[][]{};
+		}
 
 		sprites.add("ghostBlue.png"); // 0
 		sprites.add("blue_2.png"); // 1
