@@ -29,10 +29,10 @@ public class GameController implements Serializable {
 
 	private Pacman pacman;
 
-	private Audio musicController;
-	public Audio sfxController;
-	public Audio chompSfx = new Audio("chomp.wav");
-	public Audio sfxGhostController = new Audio("eatghost.wav");
+	private transient Audio musicController;
+	public transient Audio sfxController;
+	public transient Audio chompSfx = new Audio("chomp.wav");
+	public transient Audio sfxGhostController = new Audio("eatghost.wav");
 
     public void drawAllElements(ArrayList<Element> elemArray, Graphics g){
 		pacman=(Pacman) elemArray.get(0);

@@ -66,15 +66,7 @@ public class InitialScreen extends javax.swing.JFrame {
 	 * Configurar botão de Iniciar Jogo
 	 */
 	private void configureOpenButton(){
-		startButton = new JButton("Open");
-		startButton.setSize(100, 50);
-		startButton.setAlignmentX(CENTER_ALIGNMENT);
-		startButton.setAlignmentY(CENTER_ALIGNMENT);
-		startButton.setLocation(250, 500);
-		startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-		HandlerOpenButton handlerOpen = new HandlerOpenButton();
-		startButton.addActionListener(handlerOpen);
-		add(startButton);
+
 	}
 	
 	

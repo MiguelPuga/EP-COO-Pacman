@@ -4,9 +4,10 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 
-public class Audio extends JFrame {
+public class Audio extends JFrame implements Serializable {
 
     private String name;
     private Clip clip;

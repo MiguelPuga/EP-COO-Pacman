@@ -10,6 +10,8 @@ public class Main {
 	public static long time;
 	
 	public static GameScreen gamePacMan;
+
+
 	
     public static void main(String[] args) {
     	
