@@ -4,11 +4,11 @@ import utils.Consts;
 import utils.Drawing;
 
 import java.awt.*;
-
+//Classe responsável pelo sangue no jogo
 public class Blood extends Element{
 
     private long startTime=0;
-
+    //Construtor da classe, seta a imagem e a posição do sangue
     public Blood(int x, int y) {
         super("blood.png");
         this.setPosition(x, y);

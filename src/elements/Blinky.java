@@ -7,8 +7,9 @@ import utils.Position;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Random;
+//Classe responsável pelo fantasma vermelho do jogo, herda da classe Ghost
 public class Blinky extends Ghost  {
-     
+	//Construtor da classe, seta os sprites específicos do pinky, as animações estão implementadas na classe Ghost
 	public Blinky(String imageName) {
 		super(imageName);
 

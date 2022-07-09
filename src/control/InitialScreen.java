@@ -10,7 +10,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import utils.Consts;
-
+//Classe responsável pela tela inicial do jogo
 public class InitialScreen extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 	private JButton startButton;
@@ -21,13 +21,13 @@ public class InitialScreen extends javax.swing.JFrame {
 	private JComboBox<String> box;
 
 	private JMenuBar menu;
-
+	//Construtor da classe, chama os métodos utilizados na tela incial e a própria tela inicial
 	public InitialScreen(){
 		configureInitialScreen();
 		configureComboBox();
 		configureMenu();
 	}
-	
+	//Método dde configuração da tela inicial, é setado ícone, dimensões e imagem da tela inicial
 	private void configureInitialScreen(){
 		int sizeWidth = Consts.NUM_CELLS * Consts.CELL_SIZE + getInsets().left + getInsets().right;
 		int sizeHeight = Consts.NUM_CELLS * Consts.CELL_SIZE + getInsets().top + getInsets().bottom;
@@ -52,7 +52,7 @@ public class InitialScreen extends javax.swing.JFrame {
 	/**
 	 * Configurar botão de Iniciar Jogo
 	 */
-	
+	//Método que configura a box de seleção dos levels do jogo
 	private void configureComboBox(){
 		box = new JComboBox<String>(levels);
 		box.setSize(100, 40);
@@ -68,7 +68,7 @@ public class InitialScreen extends javax.swing.JFrame {
 		});
 		add(box);
 	}
-
+	//Método que configura o AcitonListener para iniciar o jogo
 	public class HandlerStartButton implements ActionListener{
 		public void actionPerformed(ActionEvent ev){
 			Main.initialScreen.setVisible(false);  
@@ -77,7 +77,7 @@ public class InitialScreen extends javax.swing.JFrame {
 		}
 	}
 
- 
+	//Método que configura o AcitonListener para iniciar o jogo salvo
 	public class HandlerOpenButton implements ActionListener{
 		public void actionPerformed(ActionEvent ev){
 			Main.initialScreen.setVisible(false);  
@@ -86,7 +86,7 @@ public class InitialScreen extends javax.swing.JFrame {
 	    	Main.startGame();
 		}
 	}
-
+	//Método que configura a menu bar mostrada na tela inicial
 	private void configureMenu(){
 		HandlerStartButton handlerIniciarJogo = new HandlerStartButton();
 		HandlerOpenButton handlerOpenSavedGame = new HandlerOpenButton();

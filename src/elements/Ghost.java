@@ -14,14 +14,15 @@ import java.util.Objects;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
-
+//Classe responsável pelos fantamas desse jogo
 public abstract class Ghost extends ElementMove{
     
     private final int[][] map = Drawing.getGameScreen().getStage().getMap();
 
 	public static double speed = 0.9;
 	public static double slowSpeed = 0.5;
-
+	//Construtor da classe, seta a imagem branca e azul do ghost, além das animações dos olhos especificas
+	//de cada fantasma
     public Ghost(String imageName) {
         super(imageName);
 
@@ -51,16 +52,16 @@ public abstract class Ghost extends ElementMove{
     }
     
      
-    
+    //Método de desenho do Ghost, método abstrato pois cada fantasma possui sua própria imagem
     abstract public void autoDraw(Graphics g);
-    
+    //Método que muda a cor do fantasma para azul e deixa o msm comestível
     public void changeGhosttoBlue() {
         this.isTransposable = true;
         this.isMortal = true;
 
 		this.pos.setSpeed(slowSpeed);
     }
-
+	//Método que muda a cor do fantasma para a cor normal e volta o fantasma para imortal e skull fica completamente parada
     public void changeGhosttoNormal() {
         this.isTransposable = true;
         this.isMortal = false;
@@ -72,7 +73,7 @@ public abstract class Ghost extends ElementMove{
 		}
 		this.pos.setSpeed(speed);
     }
-
+	//Método usado para o fantasma seguir o pacman
     protected void followPacman() {
     	Pacman pacman=Drawing.getGameScreen().getPacman();
         Position posPacman=pacman.getPos();
@@ -88,10 +89,7 @@ public abstract class Ghost extends ElementMove{
 		}
 
 	}
-    
-    
-
-    
+	//Método usado para o fantasma seguir o pacman no eixo horizontal
 	protected void followPacmanHorizontal(int movDirectionPacman,Position posPacman) {
        	Random gerador = new Random();
     	if(gerador.nextInt(11)>8){
@@ -110,6 +108,7 @@ public abstract class Ghost extends ElementMove{
     		} 
     	}
 	}
+	//Método usado para o fantasma seguir o pacman no eixo vertical
 	protected void followPacmanVertical(int movDirectionPacman, Position posPacman) {
     	Random gerador = new Random();
     	if(gerador.nextInt(11)>8){
@@ -127,9 +126,9 @@ public abstract class Ghost extends ElementMove{
 				}
     		} 
     	}
-	} 
-	
-    protected void escapePacman() {
+	}
+	//Método usado para o fantasma escapar do pacman
+	protected void escapePacman() {
     	Pacman pacman=Drawing.getGameScreen().getPacman();
         Position posPacman=pacman.getPos();
         int movDirectionPacman=pacman.getMoveDirection();
@@ -141,10 +140,7 @@ public abstract class Ghost extends ElementMove{
         	escapePacmanVertical(movDirectionPacman, posPacman);
         }		
 	}
-    
-    
-
-    
+	//Método usado para o fantasma escapar do pacman no eixo horizontal
 	protected void escapePacmanHorizontal(int movDirectionPacman,Position posPacman) {
        	Random gerador = new Random();
     	if(gerador.nextInt(11)>8){
@@ -163,6 +159,7 @@ public abstract class Ghost extends ElementMove{
     		} 
     	}
 	}
+	//Método usado para o fantasma escapar do pacman no eixo vertical
 	protected void escapePacmanVertical(int movDirectionPacman, Position posPacman) {
     	Random gerador = new Random();
     	if(gerador.nextInt(11)>8){
@@ -180,7 +177,8 @@ public abstract class Ghost extends ElementMove{
 				}
     		} 
     	}
-	} 
+	}
+	//Método usado para movimentação aleatória
 	protected void moveRandom() {
     	Random gerador = new Random();
     	//this.setMovDirection(gerador.nextInt(5));
@@ -197,12 +195,12 @@ public abstract class Ghost extends ElementMove{
 		}
 
 	}
-
+	//Método que retorna a posição no eixo x
 	public int getMapX()
 	{
 		return (int)Math.round(getPos().getX());
 	}
-
+	//Método que retorna a posição no eixo y
 	public int getMapY()
 	{
 		return (int)Math.round(getPos().getY());

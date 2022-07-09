@@ -6,7 +6,7 @@ import utils.Stage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+//Classe responsável pelo salvamento do estado do jogo
 public class SaveState implements Serializable {
 
     private GameController gameController;
@@ -20,7 +20,7 @@ public class SaveState implements Serializable {
     private AnimationController.State pinkyState;
     private AnimationController.State inkyState;
     private AnimationController.State clydeState;
-
+    //Construtor da classe, salva o estado de diversos elementos do jogo
     public SaveState(GameController gameController, Pacman pacman, ArrayList<Element> elemArray, Stage stage, AnimationController.State pacmanState,
                      AnimationController.State blinkyState, AnimationController.State pinkyState,
                      AnimationController.State inkyState, AnimationController.State clydeState) {

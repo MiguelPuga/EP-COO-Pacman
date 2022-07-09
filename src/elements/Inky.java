@@ -8,9 +8,10 @@ import utils.Position;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Random;
+//Classe responsável pelo fantasma azul do jogo, herda da classe Ghost
 
 public class Inky extends Ghost  {
-     
+	//Construtor da classe, seta os sprites específicos do pinky, as animações estão implementadas na classe Ghost
 	public Inky(String imageName) {
 	      super(imageName);
 

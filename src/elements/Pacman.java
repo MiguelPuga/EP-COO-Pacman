@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
+//Classe responsável pelo Pacman, herda de ElementMove
 public class Pacman extends ElementMove{
     
     private int score=0;
@@ -23,7 +23,8 @@ public class Pacman extends ElementMove{
     private long startTimePower=0;
 	private boolean rock = false;
 	private int scoreToAddFromKillingGhost = 200;
-    
+    //Construtor da classe, seta a imagem do Pacman, inicia ele como mortal e adiciona os sprites, as animações
+	//(os vetores de inteiros) e salva as animações(animationClips), além de passar o estado da animação
     public Pacman(String imageName) {
 
         super(imageName);
@@ -121,32 +122,34 @@ public class Pacman extends ElementMove{
 	public void setNumberLifes(int numberLifes){
 		this.numberLifes=numberLifes;
 	}
-	
+	//Adiciona 1 vida
 	public void addLife(){
 		this.numberLifes++;
 	}
 	
 
 	
-	
+	//Adiciona 1 pontinho a ser comido
 	public void addNumberDotstoEat() {
 		this.numberDotstoEat++;
 	}
+	//Diminui 1 pontinho a ser comido
 	public void minusNumberDotstoEat() {
 		this.numberDotstoEat--;
 	}
+	//Diminui 1 fantasma a ser comido
 	public void minusNumberGhotstoEat() {
 		this.numberGhosttoEat--;
 	}
-	
+	//Aumenta o score em i unidades
 	public void addScore(int i) {
 		score=score+i;
 	}
-	
+	//Aumenta em 1 unidade quanto falta do score para algo
 	public void addRemainingScore(int i) {
 		this.remainingScore=this.remainingScore+i;
 	}
-    
+    //Método responsável pela impressão do Pacman na tela
     @Override
     public void autoDraw(Graphics g){
         Drawing.draw(g, this.imageIcon, pos.getY(), pos.getX());
@@ -163,7 +166,7 @@ public class Pacman extends ElementMove{
 	public void setScoreToAddFromKillingGhost(int scoreToAddFromKillingGhost) {
 		this.scoreToAddFromKillingGhost = scoreToAddFromKillingGhost;
 	}
-
+	//Método que confere se o Pacman está num evento de Power Pallet
 	public boolean isRock() {
 		return rock;
 	}

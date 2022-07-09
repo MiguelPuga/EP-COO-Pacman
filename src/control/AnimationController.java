@@ -1,9 +1,9 @@
 package control;
 
 import java.io.Serializable;
-
+//Classe responsável pelo controle de animações
 public class AnimationController implements Serializable {
-
+    //Nomeia as animações
     public enum State {
         IDLE, MOVE_TOP, MOVE_RIGHT, MOVE_BOTTOM, MOVE_LEFT,
         WEAK, BLINK, IDLE_LEFT, IDLE_TOP, IDLE_BOTTOM,

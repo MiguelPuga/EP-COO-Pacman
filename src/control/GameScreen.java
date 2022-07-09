@@ -19,6 +19,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//Classe responsável pela tela do jogo durante o jogo, depois da tela inicial
 public class GameScreen extends javax.swing.JFrame implements KeyListener {
     
     private Pacman pacman;
@@ -35,7 +36,8 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
 
     private long startAnim = 0;
     private String name = "666.png";
-
+    //Construtor da classe,define dimensões, se abre jogo novo ou jogo salvo, seta as animações do Pacman
+    //e dos fantasmas e inicia o nível(salvo ou novo)
     public GameScreen() {
     	Main.time = System.currentTimeMillis();
         Drawing.setGameScreen(this);
@@ -88,7 +90,7 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     public Stage getStage() {
         return stage;
     }
-
+    //Método que preenche o mapa com os elementos, o Pacman, os fantasmas, as caveiras e as walls
     private void fillInitialElemArrayFromMatrix(int [][]matrix) {
 	 	pacman = new Pacman("pacman_1.png");
         pacman.setPosition(1,1);
@@ -179,21 +181,21 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         audio.play();
 		
 	}
-
+    //Método que abre um jogo salvo
 	private void openSavedGame(String fileName) throws FileNotFoundException,IOException, ClassNotFoundException{
         ObjectInputStream fileInput = new ObjectInputStream(new FileInputStream(fileName));
         save = (SaveState) fileInput.readObject();
         fileInput.close();
     }
-
+    //Métodoque adiciona um elemento ao array de elementos
 	public final void addElement(Element elem) {
         elemArray.add(elem);
     }
-    
+    //Métodoque remove um elemento ao array de elementos
     public void removeElement(Element elem) {
         elemArray.remove(elem);
     }
-    
+    //Método que reiniciar o jogo com um número específico de vidas
     public void reStartGame(int numberLifes){
     	elemArray.clear();
     	elemArray = new ArrayList<Element>();
@@ -203,7 +205,8 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     	fillInitialElemArrayFromMatrix(stage.getMatrix());
     	((Pacman)elemArray.get(0)).setNumberLifes(numberLifes);
     }
-    
+    //Método que seta a imagem de background do nível e suas variações,além de mostrar na tela alguns dados como
+    //ghostsToEat e DotsToEat, algumas animações também são definidas neste método
     @Override
     public void paint(Graphics gOld) {
         Graphics g = getBufferStrategy().getDrawGraphics();
@@ -297,7 +300,7 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
             getBufferStrategy().show();
         }
     }
-    
+    //Método que inicia o timer do jogo
     public void go() {
         TimerTask task = new TimerTask() {
             
@@ -308,7 +311,7 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         Timer timer = new Timer();
         timer.schedule(task, 0, Consts.DELAY);
     }
-    
+    //Método que lê a entrada do teclado e mexe o pacman durante o jogo
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             currentKey = Pacman.MOVE_UP;
@@ -346,7 +349,7 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
 
         } 
     }
-    
+    //Método que salva o estado dos elementos do jogo
     private void saveElemArrayandStage() throws IOException {
 
         save = new SaveState(this.controller, this.pacman, this.elemArray, this.stage, AnimationController.pacmanState,

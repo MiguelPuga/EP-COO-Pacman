@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+//Classe responsável por ser o elemento base do jogo, todas as outras classes de elemento herdam desta
 public abstract class Element implements Serializable{
 
     protected ImageIcon imageIcon;
@@ -22,7 +23,8 @@ public abstract class Element implements Serializable{
     public ArrayList<String> sprites = new ArrayList<>();
     public ArrayList<Integer[]> animationsClips = new ArrayList<>();
     public int clip;
-
+    //Construtor da classe, define uma posição e a transponibilidade e comestividade, no caso de ser fantasma ajusta
+    //a velocidade, além disso, referência a imagem a ser impressa na tela do elemento e define a animação
     protected Element(String imageName) {
         this.pos = new Position(1, 1,1);
         this.isTransposable = true;
@@ -48,7 +50,7 @@ public abstract class Element implements Serializable{
         animator = new Animation(this);
 
     }
-    
+    //Método que retorna true caso dois objetos se sobreponham
     public boolean overlap(Element elem) {
         double xDist = Math.abs(elem.pos.getX() - this.pos.getX());
         double yDist = Math.abs(elem.pos.getY() - this.pos.getY());
@@ -58,7 +60,7 @@ public abstract class Element implements Serializable{
         else
             return false;
     }
-
+    //Método que muda o ImageIcon de um elemento
     public void changeImage(String imageName){
         try {
             imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
@@ -99,7 +101,7 @@ public abstract class Element implements Serializable{
     public void setTransposable(boolean isTransposable) {
         this.isTransposable = isTransposable;
     }
-
+    //Método que imprime o elemento na tela
     abstract public void autoDraw(Graphics g);
 
  

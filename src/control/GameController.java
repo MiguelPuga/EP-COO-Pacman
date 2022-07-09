@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import utils.Audio;
 import utils.Consts;
 import utils.Position;
-
+//Classe responsável pelo controle dos elementos
 public class GameController implements Serializable {
 
 	public ArrayList<Ghost> ghosts = new ArrayList<>();
@@ -33,7 +33,7 @@ public class GameController implements Serializable {
 	public transient Audio sfxController;
 	public transient Audio chompSfx = new Audio("chomp.wav");
 	public transient Audio sfxGhostController = new Audio("eatghost.wav");
-
+	//Método que imprime na tela todos os elementos no array de elementos
     public void drawAllElements(ArrayList<Element> elemArray, Graphics g){
 		pacman=(Pacman) elemArray.get(0);
 		int numberGhost=pacman.getNumberGhosttoEat();
@@ -46,6 +46,8 @@ public class GameController implements Serializable {
 		}
 
     }
+	//Método mais geral sobre o jogo, ele confere se o Pacman morreu ou ganhou o jogo, inicia os ghosts numa posição
+	//do mapa, imprime a mensagem de fim jogo, limpa a fase e pula para a próxima
     public void processAllElements(ArrayList<Element> elements, int [][]matrix, int cont){
         if(elements.isEmpty())
             return;
@@ -133,7 +135,7 @@ public class GameController implements Serializable {
 		animationHandler();
 
     }
-    
+    //Método que checa se o Pacman colidiu com um Ghost
 	private boolean checkOverlapGhostPacman(ArrayList<Element> elements, Pacman pacman,int numberGhost) {
         boolean overlapGhostPacman=false;
         for (int i=1;i<=numberGhost;i++){
@@ -143,6 +145,7 @@ public class GameController implements Serializable {
         }
         return overlapGhostPacman;
 	}
+	//Método que checha a colisão dos outros elementos com as paredes e ajeita a posição desses elementos
 	private void checkElementColideWall(ArrayList<Element> elements, int numberGhost) {
     	for (int i=0;i<=numberGhost;i++){
         	ElementMove elementMove = (ElementMove)elements.get(i);
@@ -176,6 +179,9 @@ public class GameController implements Serializable {
         }
 		
 	}
+	//Método que checa se o Pacman comeu alguma coisa e pontua/atualizado os dados do jogo
+	// caso sim e checa também o timer para algum elemento
+	//comestível desaparecer, também dá as recompensas de vida baseadas na pontuação
 	private void checkPacmanEatSomeOneAndOrTimeFruittoDesappear(ArrayList<Element> elements, Pacman pacman) {
         Element eTemp;
 
@@ -329,7 +335,7 @@ public class GameController implements Serializable {
         }
         
 	}
-
+	//Método que checa o timer de alguma das frutas aparecer
 	private void checkTimetoAppearFruit(ArrayList<Element> elements,  int [][]matrix) {
         
         long elapsedTime = System.currentTimeMillis()-Main.time;
@@ -349,7 +355,7 @@ public class GameController implements Serializable {
         }
 		
 	}
-	
+	//Método que retorna uma posição válida aleatória do mapa
 	private Position getValidRandomPositionMatrix(int[][] matrix) {
 		Random gerador = new Random();
 		int x;
@@ -362,6 +368,7 @@ public class GameController implements Serializable {
 		pos.setPosition(x, y);
 		return pos;
 	}
+	//Método que retorna os ghosts ao normal depois de ter passado certo tempo
 	private void checkTimeGhostBeNormal(ArrayList<Element> elements,
 			Pacman pacman) {
         long start=pacman.getStartTimePower();
@@ -440,6 +447,7 @@ public class GameController implements Serializable {
 
 		
 	}
+	//Método que checa se um elemento ta numa posição válida
 	public boolean isValidPosition(ArrayList<Element> elemArray, Element elem){
         Element elemAux;
         for(int i = 1; i < elemArray.size(); i++){
@@ -450,7 +458,7 @@ public class GameController implements Serializable {
         }        
         return true;
     }
-
+	//Método que configura as animações dos elementos Pacman e Ghosts
 	private void animationHandler()
 	{
 		switch (AnimationController.pacmanState) {
@@ -529,7 +537,7 @@ public class GameController implements Serializable {
 		ghost.animator.play(clip, frameRate);
 
 	}
-
+	//Método que muda as paredes
 	private void changeWalls(String img){
 		for (int i=0;i<Consts.NUM_CELLS; i=i+1) {
 			for (int j = 0; j < Consts.NUM_CELLS; j = j + 1) {

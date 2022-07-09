@@ -6,7 +6,7 @@ import utils.Position;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Random;
-
+//Classe responsável pela movimentação no jogo
 public abstract class ElementMove extends Element  {
     
     public static final int STOP = 0;
@@ -20,7 +20,7 @@ public abstract class ElementMove extends Element  {
     public int getMoveDirection(){
     	return movDirection;
     }
-    
+    //Construtor do método, seta a imagem da classe que herdou a classe
     public ElementMove(String imageName) {
         super(imageName);
     }
@@ -30,15 +30,15 @@ public abstract class ElementMove extends Element  {
     abstract public void autoDraw(Graphics g);
     
     
-
+    //Método que retorna o elemento para a última posição
     public void backToLastPosition(){
         this.pos.comeBack();
     }
-    
+    //Método que define uma direção
     public void setMovDirection(int direction) {
         movDirection = direction;
     }
-    
+    //Case switch de movimentação
     public void move() {
         switch (movDirection) {
             case MOVE_LEFT:

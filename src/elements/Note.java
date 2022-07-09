@@ -1,7 +1,7 @@
 package elements;
-
+//Classe responsável pela nota musical
 public class Note extends ElementGivePoint{
-
+    //Seta a imagem, adiciona os sprites e as animações, além de setar a quantidade de pontos do consumível
     public Note(String imageName) {
         super(imageName);
 
