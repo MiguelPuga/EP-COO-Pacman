@@ -35,7 +35,7 @@ public class InitialScreen extends javax.swing.JFrame {
 		setSize(sizeWidth, sizeHeight);
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SCC0604 - Pacman"); 
+        setTitle("Pacman - Miguel e Lizandro");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(20, 20));
         setResizable(false);		
