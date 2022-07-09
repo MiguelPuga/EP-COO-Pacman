@@ -24,8 +24,6 @@ public class InitialScreen extends javax.swing.JFrame {
 
 	public InitialScreen(){
 		configureInitialScreen();
-		configureStartButton();
-		configureOpenButton();
 		configureComboBox();
 		configureMenu();
 	}
@@ -50,25 +48,10 @@ public class InitialScreen extends javax.swing.JFrame {
         }	
         //pack();
 	}
-	private void configureStartButton(){
-		startButton = new JButton("Iniciar");
-		startButton.setSize(100, 50);
-		startButton.setAlignmentX(CENTER_ALIGNMENT);
-		startButton.setAlignmentY(CENTER_ALIGNMENT);
-		startButton.setLocation(250, 275);
-		startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-		HandlerStartButton handlerIniciarJogo = new HandlerStartButton();
-		startButton.addActionListener(handlerIniciarJogo);
-		add(startButton);
-	}
 	
 	/**
 	 * Configurar botão de Iniciar Jogo
 	 */
-	private void configureOpenButton(){
-
-	}
-	
 	
 	private void configureComboBox(){
 		box = new JComboBox<String>(levels);
