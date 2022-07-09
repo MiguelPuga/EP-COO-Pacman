@@ -2,6 +2,7 @@ package control;
 
 import elements.*;
 
+import utils.Audio;
 import utils.Consts;
 import utils.Drawing;
 import utils.Stage;
@@ -13,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -26,10 +28,13 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     private Stage stage;
 
     private SaveState save;
-    int cont = 0; 
+    int cont = 0;
     String fileName="jogo.ser";
 
     public static int currentKey = 0;
+
+    private long startAnim = 0;
+    private String name = "666.png";
 
     public GameScreen() {
     	Main.time = System.currentTimeMillis();
@@ -105,6 +110,24 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         clyde.setPosition (8,9);
         this.addElement(clyde);
 
+        for (int i=0;i<Consts.NUM_CELLS; i=i+1){
+            for(int j=0; j<Consts.NUM_CELLS; j=j+1) {
+                if(matrix[i][j] == 8)
+                {
+                    Skull skull = new Skull("skull.png");
+                    skull.setPosition(i, j);
+                    skull.getPos().setSpeed(0);
+                    this.addElement(skull);
+                    controller.skulls.add(skull);
+                }
+            }
+        }
+
+        if(Main.level==4)
+        {
+            pacman.setNumberGhosttoEat(20);
+        }
+
         controller.ghosts.add(blinky);
         controller.ghosts.add(pinky);
         controller.ghosts.add(inky);
@@ -118,34 +141,42 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         for (int i=0;i<Consts.NUM_CELLS; i=i+1){
         	for(int j=0; j<Consts.NUM_CELLS; j=j+1){
                 switch (matrix[i][j]) {
-                    case 1:
-                        Wall wall1=new Wall("bricks6.png");
-                        wall1.setPosition (i,j);
+                    case 1 -> {
+                        String wall = "bricks6.png";
+                        if (Main.level == 4) {
+                            wall = "bricks7.png";
+                        }
+                        Wall wall1 = new Wall(wall);
+                        wall1.setPosition(i, j);
                         this.addElement(wall1);
-                        break;
-                    case 0:
-                        PacDots pacDot=new PacDots("pac-dot.png");
-                        pacDot.setPosition (i,j);
+                        controller.walls.add(wall1);
+                    }
+                    case 0 -> {
+                        PacDots pacDot = new PacDots("pac-dot.png");
+                        pacDot.setPosition(i, j);
                         this.addElement(pacDot);
                         pacman.addNumberDotstoEat();
-                        break;
-
-                    case 6:
-                        PowerPellet power=new PowerPellet("power_Pellet.png");
-                        power.setPosition (i,j);
+                    }
+                    case 6 -> {
+                        PowerPellet power = new PowerPellet("power_Pellet.png");
+                        power.setPosition(i, j);
                         this.addElement(power);
-                        break;
-                    case 7:
+                    }
+                    case 7 -> {
                         Note note = new Note("note_blue.png");
                         note.setPosition(i, j);
                         this.addElement(note);
                         controller.notes.add(note);
-                        break;
-                    default:
-                        break;
-        		}
+                    }
+                    default -> {
+                    }
+                }
             }
         }
+
+        controller.sfxController = new Audio("chomp.wav");
+        Audio audio = new Audio("intro.wav");
+        audio.play();
 		
 	}
 
@@ -195,8 +226,33 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
 
         if(pacman.isRock()) {
 
+            if(startAnim == 0)
+            {
+                startAnim = System.currentTimeMillis();
+            }
+
+            long elapsed = System.currentTimeMillis() - startAnim;
+
+
+            if(elapsed >= 100)
+            {
+                startAnim = 0;
+
+                if(Objects.equals(name, "666.png"))
+                {
+                    name = "666g.png";
+                }else if (Objects.equals(name, "666g.png")) {
+                    name = "666y.png";
+                }else if(Objects.equals(name, "666y.png")) {
+                    name = "666b.png";
+                }else{
+                    name = "666.png";
+                }
+
+            }
+
             try {
-                Image newImage = Toolkit.getDefaultToolkit().getImage(new File(".").getCanonicalPath() + Consts.PATH + "666.png");
+                Image newImage = Toolkit.getDefaultToolkit().getImage(new File(".").getCanonicalPath() + Consts.PATH + name);
                 g2.drawImage(newImage,
                         0, 0, Consts.CELL_SIZE * Consts.NUM_CELLS, Consts.CELL_SIZE * Consts.NUM_CELLS, null);
             } catch (IOException e) {

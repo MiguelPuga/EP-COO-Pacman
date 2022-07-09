@@ -24,8 +24,6 @@ public class InitialScreen extends javax.swing.JFrame {
 
 	public InitialScreen(){
 		configureInitialScreen();
-		configureStartButton();
-		configureOpenButton();
 		configureComboBox();
 		configureMenu();
 	}
@@ -37,7 +35,7 @@ public class InitialScreen extends javax.swing.JFrame {
 		setSize(sizeWidth, sizeHeight);
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SCC0604 - Pacman"); 
+        setTitle("Pacman - Miguel e Lizandro");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(20, 20));
         setResizable(false);		
@@ -50,33 +48,10 @@ public class InitialScreen extends javax.swing.JFrame {
         }	
         //pack();
 	}
-	private void configureStartButton(){
-		startButton = new JButton("Iniciar");
-		startButton.setSize(100, 50);
-		startButton.setAlignmentX(CENTER_ALIGNMENT);
-		startButton.setAlignmentY(CENTER_ALIGNMENT);
-		startButton.setLocation(250, 275);
-		startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-		HandlerStartButton handlerIniciarJogo = new HandlerStartButton();
-		startButton.addActionListener(handlerIniciarJogo);
-		add(startButton);
-	}
 	
 	/**
 	 * Configurar botão de Iniciar Jogo
 	 */
-	private void configureOpenButton(){
-		startButton = new JButton("Open");
-		startButton.setSize(100, 50);
-		startButton.setAlignmentX(CENTER_ALIGNMENT);
-		startButton.setAlignmentY(CENTER_ALIGNMENT);
-		startButton.setLocation(250, 500);
-		startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-		HandlerOpenButton handlerOpen = new HandlerOpenButton();
-		startButton.addActionListener(handlerOpen);
-		add(startButton);
-	}
-	
 	
 	private void configureComboBox(){
 		box = new JComboBox<String>(levels);

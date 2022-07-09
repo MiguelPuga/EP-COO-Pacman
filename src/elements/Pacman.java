@@ -171,4 +171,8 @@ public class Pacman extends ElementMove{
 	public void setRock(boolean rock) {
 		this.rock = rock;
 	}
+
+	public void setNumberGhosttoEat(int numberGhosttoEat) {
+		this.numberGhosttoEat = numberGhosttoEat;
+	}
 }
