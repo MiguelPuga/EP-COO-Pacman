@@ -3,12 +3,12 @@ package elements;
 import utils.Consts;
 
 import java.awt.*;
-
+//Classe responsável pelos textos durante o jogo
 public class ScreenText extends Element {
 
     private String txt;
     private long startTime=0;
-
+    //Construtor da classe, seta um texto e sua posição na tela
     public ScreenText(String txt, int x, int y) {
         super(txt);
         this.txt = txt;
@@ -22,6 +22,7 @@ public class ScreenText extends Element {
     public void setStartTime(long start){
         this.startTime=start;
     }
+    //Método responsável pela impressão do texto
     @Override
     public void autoDraw(Graphics g) {
         g.setColor(Color.white);

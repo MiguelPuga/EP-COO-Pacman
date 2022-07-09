@@ -7,8 +7,9 @@ import utils.Position;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Random;
+//Classe responsável pelo fantasma rosa do jogo, estende a classe Ghost
 public class Pinky extends Ghost  {
-     
+     //Construtor da classe, seta os sprites específicos do pinky, as animações estão implementadas na classe Ghost
 	public Pinky(String imageName) {
 		super(imageName);
 

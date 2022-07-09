@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.File;
+//Classe responsável pelas constantes de algumas dimensões espaciais e temporais do jogo
 public class Consts {
     public static final int CELL_SIZE = 30;
     public static final int NUM_CELLS = 20;
@@ -13,8 +14,5 @@ public class Consts {
     public static final int DELAY = 20;
     
     public static final int DISTANCEGHOST = 8;
-  
- 
-    
-    
+
 }

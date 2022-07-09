@@ -1,13 +1,13 @@
 package utils;
 
 import java.io.Serializable;
-
+//Classe responsável pelo mapa do jogo, implementa Serializable para poder salvar o estado atual do mapa
 public class Stage implements Serializable{
 	int id=1;
     int [][]matrix;
 	int [][]map;
     String background;
-    
+    //Construtor da classe, implementa um Switch Case id com os níveis do mapa, tendo o background e as walls
     public Stage(int id){
 	    this.id=id;
 	    switch (id) {

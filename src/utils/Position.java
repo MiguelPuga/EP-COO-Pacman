@@ -3,8 +3,8 @@ package utils;
 import elements.Ghost;
 
 import java.io.Serializable;
-
-
+//Classe responsável pelas posições no jogo, implementa Serializable para poder salvar o estado atual da posição de
+//qualquer entidade
 public class Position implements Serializable{
     /* Elements are positioned in a grid layout (integers).
        However, walking is implemented with float steps (continuous).
@@ -19,12 +19,13 @@ public class Position implements Serializable{
     private double previousY;
 
     private double speed = 1;
-
+    //Construtor da classe, seta uma posição (x,y) e velocidade
     public Position(double x, double y, double speed){
         this.setPosition(x,y);
         this.speed = speed;
     }
 
+    //Método que verifica a validade de um ponto x e um ponto y e seta posição de um elemento
     public final boolean setPosition(double x, double y){
         int factor = (int)Math.pow(10, Consts.WALK_STEP_DEC_PLACES+1);
         x = (double)Math.round(x * factor) / factor;

@@ -4,7 +4,7 @@ import elements.Element;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+//Classe responsável pelas animações do jogo
 public class Animation implements Serializable {
 
     private Element parent;
@@ -12,12 +12,12 @@ public class Animation implements Serializable {
     private int frame = 0;
 
     private int lastClip = 0;
-
+    //Construtor, seta a entidade a ser animada
     public Animation(Element parent)
     {
         this.parent = parent;
     }
-
+    //Método que roda uma animação
     public void play(int clip, int frameRate)
     {
         Integer[] animationClip = parent.animationsClips.get(clip);
