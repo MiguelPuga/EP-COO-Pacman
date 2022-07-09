@@ -2,9 +2,10 @@ package utils;
 
 import elements.Element;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Animation {
+public class Animation implements Serializable {
 
     private Element parent;
     private long startAnim = 0;

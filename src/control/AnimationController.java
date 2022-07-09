@@ -1,6 +1,8 @@
 package control;
 
-public class AnimationController {
+import java.io.Serializable;
+
+public class AnimationController implements Serializable {
 
     public enum State {
         IDLE, MOVE_TOP, MOVE_RIGHT, MOVE_BOTTOM, MOVE_LEFT,

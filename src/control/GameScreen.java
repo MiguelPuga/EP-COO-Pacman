@@ -21,7 +21,8 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     
     private Pacman pacman;
     private ArrayList<Element> elemArray;
-    private final GameController controller = new GameController();
+    private GameController controller = new GameController();
+
     private Stage stage;
 
     private SaveState save;
@@ -46,9 +47,16 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         if(Main.openSavedGame){
         	try{
         		openSavedGame(fileName);
+                this.controller = save.getGameController();
                 this.pacman = save.getPacman();
                 this.stage = save.getStage();
                 this.elemArray = save.getElemArray();
+                AnimationController.pacmanState = save.getPacmanState();
+                AnimationController.pinkyState = save.getPinkyState();
+                AnimationController.blinkyState = save.getBlinkyState();
+                AnimationController.inkyState = save.getInkyState();
+                AnimationController.clydeState = save.getClydeState();
+
         	}
         	catch(FileNotFoundException e1){
         	 		System.err.println("Arquivo jogo.ser não existente. Iniciando novo jogo ...");
@@ -138,13 +146,13 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
         		}
             }
         }
-
 		
 	}
 
 	private void openSavedGame(String fileName) throws FileNotFoundException,IOException, ClassNotFoundException{
         ObjectInputStream fileInput = new ObjectInputStream(new FileInputStream(fileName));
         save = (SaveState) fileInput.readObject();
+        fileInput.close();
     }
 
 	public final void addElement(Element elem) {
@@ -182,6 +190,17 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
                 } catch (IOException ex) {
                     Logger.getLogger(GameScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+        }
+
+        if(pacman.isRock()) {
+
+            try {
+                Image newImage = Toolkit.getDefaultToolkit().getImage(new File(".").getCanonicalPath() + Consts.PATH + "666.png");
+                g2.drawImage(newImage,
+                        0, 0, Consts.CELL_SIZE * Consts.NUM_CELLS, Consts.CELL_SIZE * Consts.NUM_CELLS, null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
                
@@ -248,18 +267,18 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
 
             if(pacman.isRock()) {
                 switch (pacman.getMoveDirection()) {
-                    case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE;
-                    case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFT;
-                    case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOP;
-                    case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOM;
-                }
-            }else
-            {
-                switch (pacman.getMoveDirection()) {
                     case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE_RIGHTX;
                     case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFTX;
                     case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOPX;
                     case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOMX;
+                }
+            }else
+            {
+                switch (pacman.getMoveDirection()) {
+                    case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE;
+                    case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFT;
+                    case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOP;
+                    case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOM;
                 }
             }
         } else if ((e.getKeyCode() == KeyEvent.VK_S) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
@@ -274,10 +293,13 @@ public class GameScreen extends javax.swing.JFrame implements KeyListener {
     
     private void saveElemArrayandStage() throws IOException {
 
-        save = new SaveState(this.pacman, this.elemArray, this.stage);
+        save = new SaveState(this.controller, this.pacman, this.elemArray, this.stage, AnimationController.pacmanState,
+                AnimationController.blinkyState, AnimationController.pinkyState,
+                AnimationController.inkyState, AnimationController.clydeState);
 
         ObjectOutputStream fileOutput = new ObjectOutputStream(new FileOutputStream("jogo.ser"));
         fileOutput.writeObject(save);
+        fileOutput.close();
  	}
 
 	/**

@@ -10,10 +10,11 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import utils.Audio;
 import utils.Consts;
 import utils.Position;
 
-public class GameController {
+public class GameController implements Serializable {
 
 	public ArrayList<Ghost> ghosts = new ArrayList<>();
 	public ArrayList<Note> notes = new ArrayList<>();
@@ -23,6 +24,8 @@ public class GameController {
 	public Ghost clyde;
 
 	private Pacman pacman;
+
+	private Audio audioController;
 
     public void drawAllElements(ArrayList<Element> elemArray, Graphics g){
 		pacman=(Pacman) elemArray.get(0);
@@ -131,12 +134,20 @@ public class GameController {
 
 				if(elementMove instanceof Pacman)
 				{
-					switch (elementMove.getMoveDirection())
-					{
-						case ElementMove.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE;
-						case ElementMove.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFT;
-						case ElementMove.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOP;
-						case ElementMove.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOM;
+					if(pacman.isRock()) {
+						switch (elementMove.getMoveDirection()) {
+							case ElementMove.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE_RIGHTX;
+							case ElementMove.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFTX;
+							case ElementMove.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOPX;
+							case ElementMove.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOMX;
+						}
+					}else{
+						switch (elementMove.getMoveDirection()) {
+							case ElementMove.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.IDLE;
+							case ElementMove.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.IDLE_LEFT;
+							case ElementMove.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.IDLE_TOP;
+							case ElementMove.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.IDLE_BOTTOM;
+						}
 					}
 
 					GameScreen.currentKey = ElementMove.STOP;
@@ -166,6 +177,10 @@ public class GameController {
 					elements.remove(eTemp);
 					if (eTemp instanceof Ghost) {
 						int killScore = pacman.getScoreToAddFromKillingGhost();
+						if(pacman.isRock())
+						{
+							killScore = 666;
+						}
 						pacman.minusNumberGhotstoEat();
 						pacman.addScore(killScore);
 						pacman.addRemainingScore(killScore);
@@ -194,7 +209,18 @@ public class GameController {
 
 							if(eTemp instanceof Note)
 							{
+								if (pacman.isRock()) {
+									audioController.stop();
+								}
+								audioController = new Audio("666.wav");
+								audioController.play();
 								pacman.setRock(true);
+								switch (pacman.getMoveDirection()) {
+									case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.MOVE_TOPX;
+									case Pacman.MOVE_LEFT -> AnimationController.pacmanState = AnimationController.State.MOVE_LEFTX;
+									case Pacman.MOVE_RIGHT -> AnimationController.pacmanState = AnimationController.State.MOVE_RIGHTX;
+									case Pacman.MOVE_DOWN -> AnimationController.pacmanState = AnimationController.State.MOVE_BOTTOMX;
+								}
 							}
 
 							pacman.setStartTimePower(System.currentTimeMillis());
@@ -276,33 +302,60 @@ public class GameController {
         if (start!=0){
         	long elapsedTimePower = System.currentTimeMillis()-start;
 
-			if(elapsedTimePower >= 5600 &&  elapsedTimePower < 7000)
-			{
-				AnimationController.blinkyState = AnimationController.State.BLINK;
-				AnimationController.inkyState = AnimationController.State.BLINK;
-				AnimationController.pinkyState = AnimationController.State.BLINK;
-				AnimationController.clydeState = AnimationController.State.BLINK;
-				return;
-			}
-
-        	if(elapsedTimePower>=7000){
-
-				AnimationController.blinkyState = AnimationController.State.MOVE_RIGHT;
-				AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
-				AnimationController.pinkyState = AnimationController.State.MOVE_RIGHT;
-				AnimationController.clydeState = AnimationController.State.MOVE_RIGHT;
-
-				pacman.setRock(false);
-
-        		pacman.setStartTimePower(0);
-				pacman.setScoreToAddFromKillingGhost(200);
-
-				for (Ghost ghost:
-					 ghosts) {
-					ghost.changeGhosttoNormal();
+			if(!pacman.isRock()) {
+				if (elapsedTimePower >= 5600 && elapsedTimePower < 7000) {
+					AnimationController.blinkyState = AnimationController.State.BLINK;
+					AnimationController.inkyState = AnimationController.State.BLINK;
+					AnimationController.pinkyState = AnimationController.State.BLINK;
+					AnimationController.clydeState = AnimationController.State.BLINK;
+					return;
 				}
-        			
-        	}
+
+				if (elapsedTimePower >= 7000) {
+
+					AnimationController.blinkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.pinkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.clydeState = AnimationController.State.MOVE_RIGHT;
+
+					pacman.setStartTimePower(0);
+					pacman.setScoreToAddFromKillingGhost(200);
+
+					for (Ghost ghost :
+							ghosts) {
+						ghost.changeGhosttoNormal();
+					}
+
+				}
+			}else
+			{
+				if (elapsedTimePower >= 40000 && elapsedTimePower < 42500) {
+					AnimationController.blinkyState = AnimationController.State.BLINK;
+					AnimationController.inkyState = AnimationController.State.BLINK;
+					AnimationController.pinkyState = AnimationController.State.BLINK;
+					AnimationController.clydeState = AnimationController.State.BLINK;
+					return;
+				}
+
+				if (elapsedTimePower >= 42500) {
+
+					AnimationController.blinkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.pinkyState = AnimationController.State.MOVE_RIGHT;
+					AnimationController.clydeState = AnimationController.State.MOVE_RIGHT;
+
+					pacman.setRock(false);
+
+					pacman.setStartTimePower(0);
+					pacman.setScoreToAddFromKillingGhost(200);
+
+					for (Ghost ghost :
+							ghosts) {
+						ghost.changeGhosttoNormal();
+					}
+
+				}
+			}
         	
         }
         
