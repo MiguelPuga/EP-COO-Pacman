@@ -15,25 +15,35 @@ public class Audio extends JFrame {
     {
         this.name = name;
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(name).getAbsoluteFile());
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(name));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             //clip.start();
             //clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception ex) {
+            clip.close();
             ex.printStackTrace();
         }
     }
 
     public void play()
     {
-
+        clip.setFramePosition(0);
         clip.start();
+    }
+
+    public void close(){
+        clip.close();
     }
 
     public void stop()
     {
         clip.stop();
+    }
+
+    public void setVolume(float volume){
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(volume);
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JOptionPane;
 
 import utils.Audio;
@@ -17,7 +18,10 @@ import utils.Position;
 public class GameController implements Serializable {
 
 	public ArrayList<Ghost> ghosts = new ArrayList<>();
+	public ArrayList<Ghost> skulls = new ArrayList<>();
 	public ArrayList<Note> notes = new ArrayList<>();
+
+	public ArrayList<Wall> walls = new ArrayList<>();
 	public Ghost blinky;
 	public Ghost pinky;
 	public Ghost inky;
@@ -25,7 +29,10 @@ public class GameController implements Serializable {
 
 	private Pacman pacman;
 
-	private Audio audioController;
+	private Audio musicController;
+	public Audio sfxController;
+	public Audio chompSfx = new Audio("chomp.wav");
+	public Audio sfxGhostController = new Audio("eatghost.wav");
 
     public void drawAllElements(ArrayList<Element> elemArray, Graphics g){
 		pacman=(Pacman) elemArray.get(0);
@@ -85,6 +92,16 @@ public class GameController implements Serializable {
         }
         else if(pacman.getNumberDotstoEat() == 0){  
         	Main.level += 1;
+			ghosts.clear();
+			skulls.clear();
+			notes.clear();
+			walls.clear();
+
+			if(Main.level == 4)
+			{
+				pacman.setNumberGhosttoEat(20);
+			}
+
         	if(Main.level>=5){
         		Main.gamePacMan.dispose();
         		JOptionPane.showMessageDialog(null, "Fim do jogo");
@@ -172,13 +189,30 @@ public class GameController implements Serializable {
 				}
 			}
 
+			if (eTemp instanceof Blood) {
+				long elapsed = System.currentTimeMillis() - ((Blood) eTemp).getStartTime();
+				if (elapsed >= 5000) {
+					elements.remove(eTemp);
+				}
+			}
+
 			if(pacman.overlap(eTemp)){
 				if(eTemp.isTransposable() && eTemp.isMortal()){
 					elements.remove(eTemp);
 					if (eTemp instanceof Ghost) {
+
+						if(sfxGhostController != null) {
+							sfxGhostController.stop();
+						}
+						sfxGhostController = new Audio("eatghost.wav");
+						sfxGhostController.play();
+
 						int killScore = pacman.getScoreToAddFromKillingGhost();
 						if(pacman.isRock())
 						{
+							Blood blood = new Blood((int) eTemp.getPos().getX(), (int) eTemp.getPos().getY());
+							elements.add(blood);
+							blood.setStartTime(System.currentTimeMillis());
 							killScore = 666;
 						}
 						pacman.minusNumberGhotstoEat();
@@ -188,14 +222,34 @@ public class GameController implements Serializable {
 						ScreenText txt = new ScreenText(String.valueOf(killScore), (int)Math.round(eTemp.getPos().getX()), (int)Math.round(eTemp.getPos().getY()));
 						elements.add(txt);
 						txt.setStartTime(System.currentTimeMillis());
-						ghosts.remove(eTemp);
+						if(eTemp instanceof Skull)
+						{
+							skulls.remove(eTemp);
+						}else {
+							ghosts.remove(eTemp);
+						}
 					}
 
 					if (eTemp instanceof ElementGivePoint){
-						pacman.addScore(((ElementGivePoint) eTemp).getNumberPoints());
-						pacman.addRemainingScore(((ElementGivePoint) eTemp).getNumberPoints());
+
+						int points = ((ElementGivePoint) eTemp).getNumberPoints();
+
+						if(pacman.isRock() && (eTemp instanceof Cherry || eTemp instanceof Strawberry)){
+							points = 666;
+						}
+
+						pacman.addScore(points);
+						pacman.addRemainingScore(points);
 
 						if (eTemp instanceof PacDots){
+
+							if(chompSfx == null) {
+								chompSfx = new Audio("chomp.wav");
+							}
+							chompSfx.stop();
+							chompSfx.play();
+
+
 							pacman.minusNumberDotstoEat();
 						}
 						if (eTemp instanceof PowerPellet || eTemp instanceof Note){
@@ -209,11 +263,16 @@ public class GameController implements Serializable {
 
 							if(eTemp instanceof Note)
 							{
+
 								if (pacman.isRock()) {
-									audioController.stop();
+									musicController.stop();
+								}else
+								{
+									changeWalls("skull.png");
 								}
-								audioController = new Audio("666.wav");
-								audioController.play();
+								musicController = new Audio("666.wav");
+								musicController.setVolume(6);
+								musicController.play();
 								pacman.setRock(true);
 								switch (pacman.getMoveDirection()) {
 									case Pacman.MOVE_UP -> AnimationController.pacmanState = AnimationController.State.MOVE_TOPX;
@@ -228,7 +287,10 @@ public class GameController implements Serializable {
 
 						if(eTemp instanceof Cherry || eTemp instanceof Strawberry || eTemp instanceof Note)
 						{
-							ScreenText txt = new ScreenText(String.valueOf(((ElementGivePoint) eTemp).getNumberPoints()), (int)Math.round(eTemp.getPos().getX()), (int)Math.round(eTemp.getPos().getY()));
+							sfxController.stop();
+							sfxController = new Audio("eatfruit.wav");
+							sfxController.play();
+							ScreenText txt = new ScreenText(String.valueOf(points), (int)Math.round(eTemp.getPos().getX()), (int)Math.round(eTemp.getPos().getY()));
 							elements.add(txt);
 							txt.setStartTime(System.currentTimeMillis());
 
@@ -237,7 +299,11 @@ public class GameController implements Serializable {
 					}
 				}
                 int remainingScore=pacman.getRemainingScore();
-                if(remainingScore>2999){
+                if(remainingScore>4999){
+
+					sfxController.stop();
+					sfxController = new Audio("addlife.wav");
+					sfxController.play();
                 	pacman.addLife();
                 	pacman.setRemainingScore(remainingScore-3000);
                 }
@@ -326,6 +392,11 @@ public class GameController implements Serializable {
 						ghost.changeGhosttoNormal();
 					}
 
+					for (Ghost skull :
+							skulls) {
+						skull.changeGhosttoNormal();
+					}
+
 				}
 			}else
 			{
@@ -338,6 +409,8 @@ public class GameController implements Serializable {
 				}
 
 				if (elapsedTimePower >= 42500) {
+
+					changeWalls("bricks7.png");
 
 					AnimationController.blinkyState = AnimationController.State.MOVE_RIGHT;
 					AnimationController.inkyState = AnimationController.State.MOVE_RIGHT;
@@ -352,6 +425,11 @@ public class GameController implements Serializable {
 					for (Ghost ghost :
 							ghosts) {
 						ghost.changeGhosttoNormal();
+					}
+
+					for (Ghost skull :
+							skulls) {
+						skull.changeGhosttoNormal();
 					}
 
 				}
@@ -450,6 +528,19 @@ public class GameController implements Serializable {
 
 		ghost.animator.play(clip, frameRate);
 
+	}
+
+	private void changeWalls(String img){
+		for (int i=0;i<Consts.NUM_CELLS; i=i+1) {
+			for (int j = 0; j < Consts.NUM_CELLS; j = j + 1) {
+				if (Main.gamePacMan.getStage().getMatrix()[i][j] == 1) {
+					for (Wall wall:
+						 walls) {
+						wall.changeImage(img);
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -22,8 +22,6 @@ public abstract class Ghost extends ElementMove{
 	public static double speed = 0.9;
 	public static double slowSpeed = 0.5;
 
-	private long startTime;
-
     public Ghost(String imageName) {
         super(imageName);
 
@@ -61,37 +59,18 @@ public abstract class Ghost extends ElementMove{
         this.isMortal = true;
 
 		this.pos.setSpeed(slowSpeed);
-
-//        try {
-//            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
-//            Image img = imageIcon.getImage();
-//            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
-//            Graphics g = bi.createGraphics();
-//            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
-//            imageIcon = new ImageIcon(bi);
-//
-//        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-//        }
     }
 
     public void changeGhosttoNormal() {
         this.isTransposable = true;
         this.isMortal = false;
 
+		if(this instanceof Skull)
+		{
+			this.pos.setSpeed(0);
+			return;
+		}
 		this.pos.setSpeed(speed);
-//
-//        try {
-//            imageIcon = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
-//            Image img = imageIcon.getImage();
-//            BufferedImage bi = new BufferedImage(Consts.CELL_SIZE, Consts.CELL_SIZE, BufferedImage.TYPE_INT_ARGB);
-//            Graphics g = bi.createGraphics();
-//            g.drawImage(img, 0, 0, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
-//            imageIcon = new ImageIcon(bi);
-//
-//        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-//        }
     }
 
     protected void followPacman() {
